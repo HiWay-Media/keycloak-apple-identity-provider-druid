@@ -9,20 +9,20 @@ ADD --chown=keycloak:keycloak https://github.com/klausbetz/apple-identity-provid
 # build optimized image
 RUN /opt/keycloak/bin/kc.sh build 
 #
-FROM quay.io/keycloak/keycloak:22.0.1 as druid-builder
+FROM quay.io/keycloak/keycloak:22.0.1 as druid
 #ENV KC_HEALTH_ENABLED=true
 ENV KC_FEATURES=token-exchange
 ENV KC_METRICS_ENABLED=true
 # Install custom providers
 COPY druid-social-identity-provider-1.0.2.jar /opt/keycloak/providersdruid-social-identity-provider-1.0.2.jar
 # build optimized image
-RUN /opt/keycloak/bin/kc.sh build 
+RUN /opt/keycloak/bin/kc.sh build --verbose
 #
 #
 FROM quay.io/keycloak/keycloak:22.0.1
 WORKDIR /opt/keycloak
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
-COPY --from=druid-builder /opt/keycloak/ /opt/keycloak/
+COPY --from=druid /opt/keycloak/ /opt/keycloak/
 RUN /opt/keycloak/bin/kc.sh build 
 #
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
