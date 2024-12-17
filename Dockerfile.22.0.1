@@ -16,7 +16,7 @@ ENV KC_METRICS_ENABLED=true
 # Install custom providers
 COPY druid-social-identity-provider-1.0.2.jar /opt/keycloak/providers/druid-social-identity-provider-1.0.2.jar
 # build optimized image
-RUN /opt/keycloak/bin/kc.sh build --verbose
+RUN /opt/keycloak/bin/kc.sh build
 #
 #
 FROM quay.io/keycloak/keycloak:22.0.1
