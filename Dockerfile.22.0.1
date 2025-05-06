@@ -14,7 +14,7 @@ FROM quay.io/keycloak/keycloak:22.0.1 as druid
 ENV KC_FEATURES=token-exchange
 ENV KC_METRICS_ENABLED=true
 # Install custom providers
-ADD --chown=keycloak:keycloak https://github.com/HiWay-Media/keycloak-identity-provider-druid/releases/download/1.0.0/druid-social-identity-provider-prod-1.1.0.jar /opt/keycloak/providers/druid-social-identity-provider-prod-1.1.0.jar 
+ADD --chown=keycloak:keycloak https://github.com/HiWay-Media/keycloak-identity-provider-druid/releases/download/v1.0.1/druid-social-identity-provider-prod-1.1.0.jar /opt/keycloak/providers/druid-social-identity-provider-prod-1.1.0.jar 
 # build optimized image
 RUN /opt/keycloak/bin/kc.sh build
 #
