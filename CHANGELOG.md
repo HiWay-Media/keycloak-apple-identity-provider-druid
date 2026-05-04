@@ -12,6 +12,15 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it/1.0.0/) e il p
 
 ---
 
+## [1.1.1] - 2026-05-04
+
+### Corretto
+- **`Dockerfile.22.0.1-dev`**: risolto problema critico per cui `fitp-enricher-1.0.0.jar` non veniva caricato da Keycloak a runtime.
+  - **Causa**: la struttura multi-stage con due stage separati (`builder` e `druid`), ognuno con la propria `kc.sh build`, generava artifact di build in conflitto. Il `COPY --from=druid` sovrascriveva gli artifact del `builder`, e il `kc.sh build` finale operava su uno stato inconsistente, ignorando alcuni provider.
+  - **Soluzione**: consolidati tutti i provider (`apple`, `druid`, `fitp-enricher`) in un unico stage `builder` con una singola esecuzione di `kc.sh build`. Rimosso lo stage `druid` separato e il secondo `kc.sh build` nel stage finale.
+
+---
+
 ## [1.1.0] - 2026-05-04
 
 ### Aggiunto
