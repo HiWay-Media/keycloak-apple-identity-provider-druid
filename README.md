@@ -1,27 +1,94 @@
 # keycloak-apple-identity-provider-druid
 
-Welcome to the Keycloak Apple Identity Provider Druid repository! This project offers integration of Apple ID authentication and Druid Single Sign-On (SSO) within Keycloak. It enables users to authenticate using their Apple credentials and facilitates SSO with Druid.
+Docker images per Keycloak con integrazione dell'Apple Identity Provider e del provider SSO per Apache Druid. Basato sui plugin open-source di [klausbetz](https://github.com/klausbetz/apple-identity-provider-keycloak) e [HiWay-Media](https://github.com/HiWay-Media/keycloak-identity-provider-druid).
 
-## Introduction
+## Introduzione
 
-This repository provides a Keycloak extension to support Apple ID as an identity provider, alongside SSO integration with Apache Druid. It simplifies adding Apple authentication to your applications and allows seamless access to Druid dashboards.
+Questo repository fornisce immagini Docker pronte all'uso di Keycloak con le seguenti estensioni pre-installate:
 
-## Features
+- **Apple Social Identity Provider** (`apple-identity-provider-1.10.0.jar`) — permette agli utenti di autenticarsi con Apple ID tramite Keycloak.
+- **Druid Social Identity Provider** (`druid-social-identity-provider-prod-1.1.0.jar` / `druid-social-identity-provider-dev-1.1.0.jar`) — abilita il Single Sign-On (SSO) tra Keycloak e Apache Druid.
+- **FITP Enricher** (`fitp-enricher-1.0.0.jar`) — arricchimento token aggiuntivo, disponibile solo nell'immagine dev.
 
-- **Apple ID Authentication**: Integrates Apple ID login within Keycloak, allowing users to authenticate with Apple credentials.
-- **Druid SSO**: Enables Keycloak-managed SSO for Apache Druid, streamlining access and enhancing user experience.
-- **Easy Configuration**: Provides straightforward setup processes for both Apple ID and Druid SSO integrations.
-- **Security Standards**: Complies with Apple's and Druid's security best practices.
+## Funzionalità
 
+- **Apple ID Authentication**: Login tramite Apple ID integrato direttamente in Keycloak.
+- **Druid SSO**: SSO gestito da Keycloak per Apache Druid, semplificando l'accesso ai dashboard.
+- **Token Exchange**: Feature `token-exchange` abilitata di default.
+- **Metrics**: Metriche Keycloak abilitate (`KC_METRICS_ENABLED=true`).
+- **Multi-stage Docker build**: Build ottimizzata con stage separati per Apple provider e Druid provider.
+- **Varianti di immagine**: Disponibili versioni `latest`, `22.0.1` e `22.0.1-dev`.
 
-## Contributing
+## Immagini Docker disponibili
 
-We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for more information.
+| Dockerfile | Base image | Providers inclusi | Feature aggiuntive |
+|---|---|---|---|
+| `Dockerfile.latest` | `keycloak:latest` | Apple 1.10.0, Druid prod 1.1.0 | `token-exchange` |
+| `Dockerfile.22.0.1` | `keycloak:22.0.1` | Apple 1.10.0, Druid prod 1.1.0 | `token-exchange` |
+| `Dockerfile.22.0.1-dev` | `keycloak:22.0.1` | Apple 1.10.0, Druid dev 1.1.0, FITP Enricher 1.0.0 | `token-exchange`, `scripts`, `impersonation`, `admin-fine-grained-authz` |
 
-## License
+## Utilizzo
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+### Build dell'immagine
 
-## Acknowledgements
+```bash
+# Immagine latest
+docker build -f Dockerfile.latest -t keycloak-apple-druid:latest .
 
-We extend our thanks to the Keycloak and Apache Druid communities for their continuous support and contributions to the open-source ecosystem.
+# Immagine versione 22.0.1 (produzione)
+docker build -f Dockerfile.22.0.1 -t keycloak-apple-druid:22.0.1 .
+
+# Immagine versione 22.0.1 (sviluppo)
+docker build -f Dockerfile.22.0.1-dev -t keycloak-apple-druid:22.0.1-dev .
+```
+
+### Avvio del container
+
+```bash
+docker run -p 8080:8080 \
+  -e KEYCLOAK_ADMIN=admin \
+  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  keycloak-apple-druid:latest \
+  start-dev
+```
+
+### Configurazione Apple Identity Provider
+
+Dopo il deploy, configurare il provider Apple in Keycloak:
+
+1. Accedere alla Admin Console di Keycloak.
+2. Selezionare il realm desiderato → **Identity Providers** → **Add provider** → **Apple**.
+3. Inserire `Client ID`, `Team ID`, `Key ID` e la chiave privata `.p8` ottenuti da [Apple Developer](https://developer.apple.com/).
+
+### Configurazione Druid SSO
+
+1. In Keycloak, configurare un client dedicato per Apache Druid con il flusso OIDC.
+2. In Druid, configurare `druid.auth.authenticatorChain` con il provider Keycloak.
+3. Riferirsi alla documentazione del plugin: [keycloak-identity-provider-druid](https://github.com/HiWay-Media/keycloak-identity-provider-druid).
+
+## Requisiti
+
+- Docker >= 20.x
+- Accesso a `quay.io` per il pull dell'immagine base Keycloak
+- Credenziali Apple Developer (per il provider Apple)
+
+## Dipendenze
+
+| Componente | Versione | Fonte |
+|---|---|---|
+| Apple Identity Provider | 1.10.0 | [klausbetz/apple-identity-provider-keycloak](https://github.com/klausbetz/apple-identity-provider-keycloak) |
+| Druid Identity Provider (prod) | 1.1.0 | [HiWay-Media/keycloak-identity-provider-druid](https://github.com/HiWay-Media/keycloak-identity-provider-druid) |
+| Druid Identity Provider (dev) | 1.1.0 | [HiWay-Media/keycloak-identity-provider-druid](https://github.com/HiWay-Media/keycloak-identity-provider-druid) |
+| FITP Enricher | 1.0.0 | [HiWay-Media/keycloak-fitp-enricher](https://github.com/HiWay-Media/keycloak-fitp-enricher) |
+
+## Contribuire
+
+I contributi sono benvenuti! Per favore apri una issue o una pull request descrivendo la modifica proposta.
+
+## Licenza
+
+Questo progetto è distribuito sotto licenza MIT. Consulta il file [LICENSE](LICENSE) per i dettagli.
+
+## Ringraziamenti
+
+Un ringraziamento alle community di Keycloak, Apache Druid, [klausbetz](https://github.com/klausbetz) e [HiWay-Media](https://github.com/HiWay-Media) per il loro contributo all'ecosistema open-source.
