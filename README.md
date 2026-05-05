@@ -16,7 +16,7 @@ Questo repository fornisce immagini Docker pronte all'uso di Keycloak con le seg
 - **Druid SSO**: SSO gestito da Keycloak per Apache Druid, semplificando l'accesso ai dashboard.
 - **Token Exchange**: Feature `token-exchange` abilitata di default.
 - **Metrics**: Metriche Keycloak abilitate (`KC_METRICS_ENABLED=true`).
-- **Multi-stage Docker build**: Build ottimizzata con stage separati per Apple provider e Druid provider.
+- **Multi-stage Docker build**: Build ottimizzata con stage separati per Apple provider e Druid provider (nelle immagini `latest` e `22.0.1`); l'immagine `22.0.1-dev` usa un singolo stage consolidato per garantire la corretta registrazione di tutti i provider.
 - **Varianti di immagine**: Disponibili versioni `latest`, `22.0.1` e `22.0.1-dev`.
 
 ## Immagini Docker disponibili

@@ -56,6 +56,7 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it/1.0.0/) e il p
 
 ---
 
-[Unreleased]: https://github.com/keycloak-apple-identity-provider-druid/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/keycloak-apple-identity-provider-druid/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/keycloak-apple-identity-provider-druid/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/keycloak-apple-identity-provider-druid/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/keycloak-apple-identity-provider-druid/releases/tag/v1.0.0
