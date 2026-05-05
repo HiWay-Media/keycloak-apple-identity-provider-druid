@@ -9,7 +9,7 @@ ADD --chown=keycloak:keycloak https://github.com/klausbetz/apple-identity-provid
 # Druid Social Identity Provider
 ADD --chown=keycloak:keycloak https://github.com/HiWay-Media/keycloak-identity-provider-druid/releases/download/v1.0.1/druid-social-identity-provider-dev-1.1.0.jar /opt/keycloak/providers/druid-social-identity-provider-dev-1.1.0.jar
 # FITP Enricher
-ADD --chown=keycloak:keycloakhttps://github.com/HiWay-Media/keycloak-fitp-enricher/releases/download/v0.1.1/fitp-enricher-0.1.1.jar /opt/keycloak/providers/fitp-enricher-0.1.1.jar
+ADD --chown=keycloak:keycloak https://github.com/HiWay-Media/keycloak-fitp-enricher/releases/download/v0.1.1/fitp-enricher-0.1.1.jar /opt/keycloak/providers/fitp-enricher-0.1.1.jar
 # build optimized image with all providers in a single pass
 RUN ls -l /opt/keycloak/providers/ && /opt/keycloak/bin/kc.sh build
 #
